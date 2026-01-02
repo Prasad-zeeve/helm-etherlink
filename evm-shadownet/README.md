@@ -67,7 +67,7 @@ Configure default values for the EVM node deployment:
 replicaCount: 1
 
 image:
-  repository: ethereum/client-go  # or your EVM node image
+  repository: ethereum/go-ethereum  # or your EVM node image (e.g., ethereum/go-ethereum for Geth)
   pullPolicy: IfNotPresent
   tag: "stable"
 
@@ -241,7 +241,7 @@ data:
 
 Update `templates/_helpers.tpl` with necessary template functions:
 
-```yaml
+```go
 {{/*
 Expand the name of the chart.
 */}}
@@ -401,6 +401,8 @@ curl -X POST -H "Content-Type: application/json" \
 ### 2. Check Sync Status
 
 ```bash
+# Note: IPC path may vary based on your EVM client and configuration
+# Common paths: /data/geth.ipc, /root/.ethereum/geth.ipc
 kubectl exec -it <pod-name> -n blockchain -- geth attach /data/geth.ipc
 > eth.syncing
 ```
