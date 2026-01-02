@@ -1,0 +1,27 @@
+replicaCount: 1
+
+image:
+  repository: etherlink/evm-node
+  tag: latest
+  pullPolicy: IfNotPresent
+
+network: shadownet
+
+service:
+  type: ClusterIP
+  rpcPort: 8545
+  wsPort: 8546
+  metricsPort: 9100
+
+persistence:
+  enabled: true
+  size: 500Gi
+  mountPath: /var/lib/etherlink
+
+resources:
+  requests:
+    cpu: "2"
+    memory: 4Gi
+  limits:
+    cpu: "4"
+    memory: 8Gi

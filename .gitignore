@@ -1,0 +1,11 @@
+# Helm
+charts/
+*.tgz
+
+# Editor
+*.swp
+*.log
+.DS_Store
+
+# Kubernetes
+*.retry

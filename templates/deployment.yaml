@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "etherlink-evm.fullname" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "etherlink-evm.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "etherlink-evm.name" . }}
+    spec:
+      containers:
+        - name: evm-node
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - "run"
+            - "--config-file=/config/evm-node.yaml"
+          ports:
+            - containerPort: {{ .Values.service.rpcPort }}
+            - containerPort: {{ .Values.service.wsPort }}
+            - containerPort: {{ .Values.service.metricsPort }}
+          volumeMounts:
+            - name: data
+              mountPath: {{ .Values.persistence.mountPath }}
+            - name: config
+              mountPath: /config
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "etherlink-evm.fullname" . }}-pvc
+        - name: config
+          configMap:
+            name: {{ include "etherlink-evm.fullname" . }}-config
